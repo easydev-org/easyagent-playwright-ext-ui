@@ -1,0 +1,52 @@
+name: release
+
+# PACKS dist/ AND ATTACHES IT TO A RELEASE, under the asset name the install host fetches.
+#
+# NO BUILD STEP, by design: dist/ is the source. What this job adds is the checks — a release with no
+# index.html installs cleanly into a panel that 404s for everything, and the cause is three layers away
+# by the time anybody sees it.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: the bundle is complete
+        run: |
+          set -euo pipefail
+          test -f dist/index.html || { echo "::error::dist/index.html is missing"; exit 1; }
+          test -f dist/ui.json     || { echo "::error::dist/ui.json is missing — the console would show no card"; exit 1; }
+          # EVERY MODULE THE ENTRY POINT IMPORTS MUST BE HERE.
+          for m in $(grep -oE "from '\./[^']+'" dist/app.js | sed "s/from '\.\///;s/'//"); do
+            test -f "dist/$m" || { echo "::error::dist/app.js imports ./$m, which is not in the bundle"; exit 1; }
+          done
+          python3 -c "import json; d=json.load(open('dist/ui.json')); assert d.get('title'), 'ui.json has no title'; print('ui.json ok:', d['title'])"
+
+      - name: pack
+        run: |
+          set -euo pipefail
+          tar -czf ui.tar.gz -C dist .
+          echo "packed $(find dist -type f | wc -l) files, $(du -h ui.tar.gz | cut -f1)"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ui-bundle
+          path: ui.tar.gz
+
+      - name: publish
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh release create "${GITHUB_REF_NAME}" ui.tar.gz \
+            --title "${GITHUB_REF_NAME}" \
+            --notes "The browser panel, as installed by easyagent-ext-ui-host."
