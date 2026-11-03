@@ -57,7 +57,10 @@ export const client = createClient(UiService, transport)
  * THE CALLER MUST REVOKE IT. Every frame is a new blob, and a panel that polls once a second without
  * revoking holds megabytes per minute for the life of the page.
  */
-export async function frameURL(contextId: string, signal?: AbortSignal): Promise<string> {
+export async function frameURL(
+  contextId: string,
+  signal?: AbortSignal,
+): Promise<string> {
   const res = await client.getFrame({ contextId }, { signal })
   // `.slice()` COPIES INTO A PLAIN ArrayBuffer. `res.jpeg` is typed `Uint8Array<ArrayBufferLike>`,
   // which includes SharedArrayBuffer, and `Blob` refuses that — a typing detail with a runtime
