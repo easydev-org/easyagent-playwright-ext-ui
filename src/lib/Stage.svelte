@@ -11,23 +11,19 @@
     frame,
     frameError,
     loadingFrame,
-    onback,
   }: {
     current: Context | null
     frame: string
     frameError: string
     loadingFrame: boolean
-    onback: () => void
   } = $props()
 </script>
 
 <main>
   {#if current === null}
-    <div class="state">Pick a browser on the left.</div>
+    <div class="state">Pick a browser above.</div>
   {:else}
     <header>
-      <!-- Visible only where the two columns collapse; on a wide screen the list is always there. -->
-      <button type="button" class="back" onclick={onback} title="back">←</button>
       <span class="title">{current.title || current.url || current.contextId}</span>
       <span class="micro muted">{current.session}</span>
     </header>
@@ -65,15 +61,6 @@
     gap: 8px;
     border-bottom: 1px solid var(--border);
     padding: 0 10px;
-  }
-
-  .back {
-    display: none;
-    cursor: pointer;
-    border: 0;
-    background: transparent;
-    color: var(--muted-foreground);
-    font-size: 16px;
   }
 
   .title {
@@ -128,11 +115,5 @@
 
   .state.err {
     color: var(--destructive);
-  }
-
-  @media (max-width: 640px) {
-    .back {
-      display: block;
-    }
   }
 </style>
