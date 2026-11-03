@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
 import path from 'node:path'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
+import { defineConfig } from 'vite'
 
 // THE BASE IS THE MOUNT POINT, and it has to match what easyagent-ext-ui-host serves. An asset URL
 // built for a different base is every asset 404ing, which the browser reports as a blank panel with
