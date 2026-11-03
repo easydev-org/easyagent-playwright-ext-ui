@@ -103,23 +103,23 @@
   }
 
   .pill.busy {
-    background: color-mix(in oklab, var(--warn) 20%, transparent);
-    color: var(--warn);
+    background: color-mix(in oklab, var(--warning) 20%, transparent);
+    color: var(--warning);
   }
 
   .pill.dead {
-    background: color-mix(in oklab, var(--danger) 18%, transparent);
-    color: var(--danger);
+    background: color-mix(in oklab, var(--destructive) 18%, transparent);
+    color: var(--destructive);
   }
 
   .state {
     padding: 12px 8px;
-    color: var(--muted);
+    color: var(--muted-foreground);
     font-size: 13px;
   }
 
   .state.err {
-    color: var(--danger);
+    color: var(--destructive);
   }
 
   /* A HOST PANE ON A PHONE SHOWS ONE COLUMN AT A TIME, so the list steps aside once a browser is

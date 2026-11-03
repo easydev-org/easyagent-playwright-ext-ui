@@ -72,7 +72,7 @@
     cursor: pointer;
     border: 0;
     background: transparent;
-    color: var(--muted);
+    color: var(--muted-foreground);
     font-size: 16px;
   }
 
@@ -117,17 +117,17 @@
     border-radius: 4px;
     background: var(--card);
     padding: 4px 10px;
-    color: var(--warn);
+    color: var(--warning);
     font-size: 12px;
   }
 
   .state {
-    color: var(--muted);
+    color: var(--muted-foreground);
     font-size: 13px;
   }
 
   .state.err {
-    color: var(--danger);
+    color: var(--destructive);
   }
 
   @media (max-width: 640px) {
