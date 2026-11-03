@@ -8,7 +8,7 @@
   import { onMount } from 'svelte'
   import type { Context } from './gen/ui/v1/ui_pb.js'
   import { client, frameURL } from './client.js'
-  import Rail from './lib/Rail.svelte'
+  import PickerBar from './lib/PickerBar.svelte'
   import Stage from './lib/Stage.svelte'
 
   const LIST_MS = 5000
@@ -112,15 +112,19 @@
   const current = $derived(contexts.find(c => c.contextId === selected) ?? null)
 </script>
 
-<div class="panel">
-  <Rail {contexts} {selected} {listError} onselect={select} />
-  <Stage {current} {frame} {frameError} {loadingFrame} onback={() => select('')} />
-</div>
+<main class="panel">
+  <!-- ONE COLUMN. The browser is picked in a bar across the top and the screenshot fills the rest. A
+       260px rail used to sit beside it, which in the console's half-width pane left the picture with
+       barely more than a thumbnail. -->
+  <PickerBar {contexts} {selected} {listError} onselect={select} />
+  <Stage {current} {frame} {frameError} {loadingFrame} />
+</main>
 
 <style>
   /* A HOST PANE, so it fills what it is given and scrolls inside its own columns rather than the page. */
   .panel {
     display: flex;
+    flex-direction: column;
     height: 100%;
     min-height: 0;
   }
